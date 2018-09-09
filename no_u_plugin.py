@@ -1,3 +1,4 @@
+import re
 from telethon import events, sync
 from global_functions import probability
 
