@@ -106,7 +106,7 @@ randcase.event = events.NewMessage(pattern=r"(.+)?\.randcase$", incoming=False)
 
 
 # 【  Ｖ  Ａ  Ｐ  Ｏ  Ｒ  Ｗ  Ａ  Ｖ  Ｅ  】
-# 
+# Make string from vaporcase 【  ａ  ｅ  ｓ  ｔ  ｈ  ｅ  ｔ  ｉ  ｃ  】
 def vaporwave(message):
     for char in message:
         if char == " ":
@@ -117,6 +117,7 @@ def vaporwave(message):
             value = ord(char) + 0xFEE0
         yield chr(value)
 
+# Make message 【  ａ  ｅ  ｓ  ｔ  ｈ  ｅ  ｔ  ｉ  ｃ  】
 async def vaporcase(event):
     sender = await event.get_sender()
     reply_msg = await event.get_reply_message()
@@ -128,7 +129,7 @@ async def vaporcase(event):
     if not message_text:
         new_reply_str = re.sub(r"(.)", r"\1  ", ''.join(vaporwave(reply_msg.raw_text)))
         print(new_reply_str)
-        await event.respond(new_reply_str, reply_to=reply_id)
+        await event.respond(f"【  {new_reply_str}】", reply_to=reply_id)
     else:
         vaporwaved = re.sub(r"(.)", r"\1  ", "".join(vaporwave(message_text)))
         if not before:
