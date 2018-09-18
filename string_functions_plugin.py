@@ -142,4 +142,4 @@ async def vaporcase(event):
     await event.delete()
     print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
 
-vaporcase.event = events.NewMessage(pattern=r"(.+ )?(?:\((.+)\))?.vc(.+)?", incoming=False)
+vaporcase.event = events.NewMessage(pattern=r"([\s\S]+ )?(?:\((.+)\))?.vc(.+)?", incoming=False)
