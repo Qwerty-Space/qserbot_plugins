@@ -126,18 +126,19 @@ async def vaporcase(event):
     message_text = event.pattern_match.group(2)
     after = event.pattern_match.group(3)
 
-    if not message_text:
-        new_reply_str = re.sub(r"(.)", r"\1  ", ''.join(vaporwave(reply_msg.raw_text)))
-        print(new_reply_str)
-        await event.respond(f"【  {new_reply_str}】", reply_to=reply_id)
-    else:
+    if message_text:
         vaporwaved = re.sub(r"(.)", r"\1  ", "".join(vaporwave(message_text)))
         if not before:
             before = ""
         if not after:
             after = ""
         new_reply_str = f"{before} 【  {vaporwaved}】 {after}"
-        await event.respond(f"{new_reply_str}", reply_to=reply_id)
+        await event.respond(new_reply_str, reply_to=reply_id)
+    elif not reply_msg:
+        pass
+    else:
+        new_reply_str = re.sub(r"(.)", r"\1  ", ''.join(vaporwave(reply_msg.raw_text)))
+        await event.respond(f"【  {new_reply_str}】", reply_to=reply_id)
     await event.delete()
     print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
 
