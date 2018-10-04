@@ -4,105 +4,37 @@ import re
 
 
 ### STRING METHODS ###
-# Capitalize message
+async def string_map(event, string_mapper):
+    message_text = event.pattern_match.group(1) or (await event.get_reply_message()).raw_text
+    new_message_text = string_mapper(message_text)
+    await event.respond(new_message_text, reply_to=event.reply_to_msg_id)
+    await event.delete()
+    sender = await event.get_sender()
+    print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
+
 async def capitalize(event):
-    sender = await event.get_sender()
-    reply_msg = await event.get_reply_message()
-    reply_id = event.reply_to_msg_id
-    message_text = event.pattern_match.group(1)
-    if not message_text:
-        await event.respond(reply_msg.raw_text.capitalize(), reply_to=reply_id)
-    else:
-        await event.respond(message_text.capitalize(), reply_to=reply_id)
-    await event.delete()
-    print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
+    await string_map(event, str.capitalize)
+capitalize.event = events.NewMessage(pattern=r"(?s)(.+)?\.capitali[zs]e$", incoming=False)
 
-capitalize.event = events.NewMessage(pattern=r"(.+)?\.capitali[zs]e$", incoming=False)
-
-
-# Make message lowercase
 async def lower(event):
-    sender = await event.get_sender()
-    reply_msg = await event.get_reply_message()
-    reply_id = event.reply_to_msg_id
-    message_text = event.pattern_match.group(1)
-    if not message_text:
-        await event.respond(reply_msg.raw_text.lower(), reply_to=reply_id)
-    else:
-        await event.respond(message_text.lower(), reply_to=reply_id)
-    await event.delete()
-    print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
+    await string_map(event, str.lower)
+lower.event = events.NewMessage(pattern=r"(?s)(.+)?\.lower$", incoming=False)
 
-lower.event = events.NewMessage(pattern=r"(.+)?\.lower$", incoming=False)
-
-
-# Swap the case of a message
-async def swapcase(event):
-    sender = await event.get_sender()
-    reply_msg = await event.get_reply_message()
-    reply_id = event.reply_to_msg_id
-    message_text = event.pattern_match.group(1)
-    if not message_text:
-        await event.respond(reply_msg.raw_text.swapcase(), reply_to=reply_id)
-    else:
-        await event.respond(message_text.swapcase(), reply_to=reply_id)
-    await event.delete()
-    print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
-
-swapcase.event = events.NewMessage(pattern=r"(.+)?\.swapcase$", incoming=False)
-
-
-# Make message titlecase
-async def title(event):
-    sender = await event.get_sender()
-    reply_msg = await event.get_reply_message()
-    reply_id = event.reply_to_msg_id
-    message_text = event.pattern_match.group(1)
-    if not message_text:
-        await event.respond(reply_msg.raw_text.title(), reply_to=reply_id)
-    else:
-        await event.respond(message_text.title(), reply_to=reply_id)
-    await event.delete()
-    print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
-
-title.event = events.NewMessage(pattern=r"(.+)?\.title$", incoming=False)
-
-
-# Make message uppercase
-async def upper(event):
-    sender = await event.get_sender()
-    reply_msg = await event.get_reply_message()
-    reply_id = event.reply_to_msg_id
-    message_text = event.pattern_match.group(1)
-    if not message_text:
-        await event.respond(reply_msg.raw_text.upper(), reply_to=reply_id)
-    else:
-        await event.respond(message_text.upper(), reply_to=reply_id)
-    await event.delete()
-    print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
-
-upper.event = events.NewMessage(pattern=r"(.+)?\.upper", incoming=False)
-
-
-### OTHER STUFF ###
-# Randomise the case of a message
 async def randcase(event):
-    sender = await event.get_sender()
-    reply_msg = await event.get_reply_message()
-    reply_id = event.reply_to_msg_id
-    message_text = event.pattern_match.group(1)
-    lst = [str.upper, str.lower]
-    # reply_msg = ''.join(choice(lst)(c) for c in reply_msg)
-    if not message_text:
-        new_reply_str = ''.join(choice(lst)(c) for c in reply_msg.raw_text)
-        await event.respond(new_reply_str, reply_to=reply_id)
-    else:
-        new_reply_str = ''.join(choice(lst)(c) for c in message_text)
-        await event.respond(new_reply_str, reply_to=reply_id)
-    await event.delete()
-    print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
+    await string_map(event, lambda x: ''.join(choice([str.upper, str.lower])(c) for c in x))
+randcase.event = events.NewMessage(pattern=r"(?s)(.+)?\.randcase$", incoming=False)
 
-randcase.event = events.NewMessage(pattern=r"(.+)?\.randcase$", incoming=False)
+async def swapcase(event):
+    await string_map(event, str.swapcase)
+swapcase.event = events.NewMessage(pattern=r"(?s)(.+)?\.swapcase$", incoming=False)
+
+async def title(event):
+    await string_map(event, str.title)
+title.event = events.NewMessage(pattern=r"(?s)(.+)?\.title$", incoming=False)
+
+async def upper(event):
+    await string_map(event, str.upper)
+upper.event = events.NewMessage(pattern=r"(?s)(.+)?\.upper", incoming=False)
 
 
 # 【  Ｖ  Ａ  Ｐ  Ｏ  Ｒ  Ｗ  Ａ  Ｖ  Ｅ  】
@@ -142,4 +74,4 @@ async def vaporcase(event):
     await event.delete()
     print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
 
-vaporcase.event = events.NewMessage(pattern=r"([\s\S]+ )?(?:\((.+)\))?.vc(.+)?", incoming=False)
+vaporcase.event = events.NewMessage(pattern=r"(.+ )?(?:\((.+)\))?\.vc(.+)?$", incoming=False)
