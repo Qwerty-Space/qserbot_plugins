@@ -30,4 +30,4 @@ async def currency(event):
         await message.delete()
 
 
-currency.event = events.NewMessage(pattern=r"^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?([a-z]{3}) (?:to|in) (\D{3})$", outgoing=True)
+currency.event = events.NewMessage(pattern=r"(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?([a-z]{3}) (?:to|in) (\D{3})$", outgoing=True)
