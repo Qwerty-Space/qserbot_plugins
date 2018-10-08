@@ -1,3 +1,18 @@
+r"""A collection of functions to manipulate text (by reply, or in a message):
+
+Most should be obvious as to what they do, but `.vc` will make text 【 ａ ｅ ｓ ｔ ｈ ｅ ｔ ｉ ｃ 】
+For example `.vc` by reply, or `(text).vc` to transform specific text.
+
+patterns:
+`(?s)(.+)?\.capitali[zs]e$`
+`(?s)(.+)?\.lower$`
+`(?s)(.+)?\.randcase$`
+`(?s)(.+)?\.swapcase$`
+`(?s)(.+)?\.title$`
+`(?s)(.+)?\.upper$`
+`(?s)(.+ )?(?:\((.+)\))?\.vc(.+)?$`
+"""
+
 from telethon import events, sync
 from random import choice
 import re
@@ -12,29 +27,35 @@ async def string_map(event, string_mapper):
     sender = await event.get_sender()
     print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
 
+
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.capitali[zs]e$", incoming=False))
 async def capitalize(event):
     await string_map(event, str.capitalize)
-capitalize.event = events.NewMessage(pattern=r"(?s)(.+)?\.capitali[zs]e$", incoming=False)
 
+
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.lower$", incoming=False))
 async def lower(event):
     await string_map(event, str.lower)
-lower.event = events.NewMessage(pattern=r"(?s)(.+)?\.lower$", incoming=False)
 
+
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.randcase$", incoming=False))
 async def randcase(event):
     await string_map(event, lambda x: ''.join(choice([str.upper, str.lower])(c) for c in x))
-randcase.event = events.NewMessage(pattern=r"(?s)(.+)?\.randcase$", incoming=False)
 
+
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.swapcase$", incoming=False))
 async def swapcase(event):
     await string_map(event, str.swapcase)
-swapcase.event = events.NewMessage(pattern=r"(?s)(.+)?\.swapcase$", incoming=False)
 
+
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.title$", incoming=False))
 async def title(event):
     await string_map(event, str.title)
-title.event = events.NewMessage(pattern=r"(?s)(.+)?\.title$", incoming=False)
 
+
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.upper$", incoming=False))
 async def upper(event):
     await string_map(event, str.upper)
-upper.event = events.NewMessage(pattern=r"(?s)(.+)?\.upper", incoming=False)
 
 
 # 【  Ｖ  Ａ  Ｐ  Ｏ  Ｒ  Ｗ  Ａ  Ｖ  Ｅ  】
@@ -50,6 +71,7 @@ def vaporwave(message):
         yield chr(value)
 
 # Make message 【  ａ  ｅ  ｓ  ｔ  ｈ  ｅ  ｔ  ｉ  ｃ  】
+@events.register(events.NewMessage(pattern=r"(?s)(.+ )?(?:\((.+)\))?\.vc(.+)?$", incoming=False))
 async def vaporcase(event):
     sender = await event.get_sender()
     reply_msg = await event.get_reply_message()
@@ -73,5 +95,3 @@ async def vaporcase(event):
         await event.respond(f"【  {new_reply_str}】", reply_to=reply_id)
     await event.delete()
     print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
-
-vaporcase.event = events.NewMessage(pattern=r"(.+ )?(?:\((.+)\))?\.vc(.+)?$", incoming=False)
