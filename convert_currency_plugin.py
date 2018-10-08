@@ -1,3 +1,12 @@
+"""Converts two different currencies using the [European Central Bank's exchange rates](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html).
+
+Example: "c GBP to/in USD" (case insensitive).
+You can also specify an amount of said currency:
+"c 5 GBP to USD".
+
+pattern:  `(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$`
+"""
+
 from time import sleep
 from telethon import events
 from currency_converter import CurrencyConverter
@@ -5,6 +14,7 @@ c = CurrencyConverter()
 
 
 # Convert Currency
+@events.register(events.NewMessage(pattern=r"(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$", outgoing=True))
 async def currency(event):
     sender = await event.get_sender()  # Get the sender
 
@@ -28,6 +38,3 @@ async def currency(event):
         )
         sleep(3)
         await message.delete()
-
-
-currency.event = events.NewMessage(pattern=r"(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?([a-z]{3}) (?:to|in) (\D{3})$", outgoing=True)
