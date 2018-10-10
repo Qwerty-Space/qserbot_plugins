@@ -7,7 +7,7 @@ from .global_functions import probability
 from telethon import events, sync
 
 
-@events.register(events.NewMessage(pattern="h+$", chats=232787997, outgoing=False))
+@events.register(events.NewMessage(pattern="h+$", chats=[232787997,51863899], outgoing=False))
 async def on_h(event):
     sender = await event.get_sender()
     print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
