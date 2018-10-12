@@ -3,11 +3,21 @@ r"""Will respond to many variations of "no u" with "no no u", to "no no no u" wi
 pattern:  `(?i)(n\w+h? ){1,50}(\w?(?:[uü]+|y(?:ou|ew)))$`
 """
 
-import re
 from telethon import events, sync
-from .global_functions import probability
 
-@events.register(events.NewMessage(pattern=re.compile(r"(n\w+h? ){1,50}(\w?(?:[uü]+|y(?:ou|ew)))$", re.I).match, outgoing=False))
+
+@events.register(events.NewMessage(pattern=r"(?i)(n\w+h? ){1,50}(\w?(?:[uü]+|y(?:ou|ew)))$", outgoing=False))
 async def no_u(event):
-    if event.is_private:
+    me = await event.client.get_me()
+    if event.is_reply:
+        replied_to = (await event.get_reply_message()).from_id
+    else:
+        try: 
+            prev_id = (event.id) - 1
+            replied_to = (await event.client.get_messages(event.chat_id, ids=prev_id)).from_id
+        except AttributeError:
+            replied_to = None
+    if replied_to == me.id:
         await event.reply(f"{event.pattern_match.group(1)}{event.pattern_match.string}".lower())
+        sender = await event.get_sender()
+        print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
