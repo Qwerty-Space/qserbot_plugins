@@ -10,10 +10,11 @@ patterns:
 `(?s)(.+)?\.swapcase$`
 `(?s)(.+)?\.title$`
 `(?s)(.+)?\.upper$`
+`(?s)(.+)?\.ladder$`
 `(?s)(.+ )?(?:\((.+)\))?\.vc(.+)?$`
 """
 
-from telethon import events, sync
+from telethon import events
 from random import choice
 import re
 
