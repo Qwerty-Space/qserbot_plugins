@@ -58,6 +58,13 @@ async def upper(event):
     await string_map(event, str.upper)
 
 
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.ladder$", incoming=False))
+async def ladder(event):
+    def ladderify(text):
+        return text.replace(" ", "\n")
+    await string_map(event, ladderify)
+
+
 # 【  Ｖ  Ａ  Ｐ  Ｏ  Ｒ  Ｗ  Ａ  Ｖ  Ｅ  】
 # Make string from vaporcase 【  ａ  ｅ  ｓ  ｔ  ｈ  ｅ  ｔ  ｉ  ｃ  】
 def vaporwave(message):
