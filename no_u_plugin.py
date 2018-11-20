@@ -6,7 +6,7 @@ pattern:  `(?i)(n\w+h? ){1,50}(\w?(?:[uü]+|y(?:ou|ew)))$`
 from telethon import events, sync
 
 
-@events.register(events.NewMessage(pattern=r"(?i)(n\w+h? ){1,50}(\w?(?:[uü]+|y(?:ou|ew)))$", outgoing=False, forwards=False))
+@events.register(events.NewMessage(pattern=r"(?i)(n\w+h?[\s\u2063]+){1,50}(\w?(?:[uü]+|y(?:ou|ew)))$", outgoing=False, forwards=False))
 async def no_u(event):
     if event.is_private:
         await event.reply(f"{event.pattern_match.group(1)}{event.pattern_match.string}".lower())
