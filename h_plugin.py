@@ -12,4 +12,4 @@ async def on_h(event):
     if event.is_private:
         sender = await event.get_sender()
         print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
-        await event.reply(file="CAADBAAD2QUAAk9YoFB_ajbmDNP3kgI")
+        await event.reply(file="CAADAgADxSgAAuCjggcKB413JNAx6wI")
