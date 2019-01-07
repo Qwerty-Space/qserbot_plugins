@@ -3,11 +3,12 @@
 pattern: `h+$`
 """
 
+from telethon import events
 from .global_functions import probability, log
-from telethon import events, sync
 
 
-@events.register(events.NewMessage(pattern="h+$", chats=232787997, outgoing=False))
+@events.register(events.NewMessage(pattern="h+$", outgoing=False))
 async def on_h(event):
-    await log(event)
-    await event.reply(file="CAADAgADxSgAAuCjggcKB413JNAx6wI")
+    if event.is_private:
+        await log(event)
+        await event.reply(file="CAADAgADxSgAAuCjggcKB413JNAx6wI")
