@@ -1,4 +1,4 @@
-"""Converts two different currencies using the [European Central Bank's exchange rates](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html).
+r"""Converts two different currencies using the [European Central Bank's exchange rates](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html).
 
 Example: "c GBP to/in USD" (case insensitive).
 You can also specify an amount of said currency:
@@ -7,8 +7,9 @@ You can also specify an amount of said currency:
 pattern:  `(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$`
 """
 
-from time import sleep
+import asyncio
 from telethon import events
+from .global_functions import log
 from currency_converter import CurrencyConverter
 c = CurrencyConverter()
 
@@ -16,8 +17,6 @@ c = CurrencyConverter()
 # Convert Currency
 @events.register(events.NewMessage(pattern=r"(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$", outgoing=True))
 async def currency(event):
-    sender = await event.get_sender()  # Get the sender
-
     fromval = event.pattern_match.group(1)
     if not fromval:
         fromval = 1
@@ -25,16 +24,16 @@ async def currency(event):
     tocur = event.pattern_match.group(3).upper()
     try:
         result = round(c.convert(fromval, fromcur, tocur), 2)
-        print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}: {result}")
+        await log(event, result)
         await event.delete()
         await event.respond(f"**{fromval} {fromcur} is:**  `{result} {tocur}`", reply_to=event.reply_to_msg_id)
     except ValueError:
-        print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}:  {event.pattern_match.string}:  NOT AVAILABLE")
+        await log(event, "NOT AVAILABLE")
         await event.delete()
         link = "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html"
         message = await event.respond(
             f"**Sorry, that currency is not supported yet.**\nFor a list of supported currencies [click here.]({link})",
             link_preview=False
         )
-        sleep(3)
+        await asyncio.sleep(3)
         await message.delete()

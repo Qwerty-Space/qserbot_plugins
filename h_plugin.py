@@ -1,15 +1,14 @@
-"""Responds to "h" with a sticker.  Only in private.
+"""Responds to "h" with a sticker.  Only from certain users.
 
-pattern:  `h+$`
+pattern: `h+$`
 """
 
-from .global_functions import probability
-from telethon import events, sync
+from telethon import events
+from .global_functions import probability, log
 
 
 @events.register(events.NewMessage(pattern="h+$", outgoing=False))
 async def on_h(event):
     if event.is_private:
-        sender = await event.get_sender()
-        print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
+        await log(event)
         await event.reply(file="CAADAgADxSgAAuCjggcKB413JNAx6wI")

@@ -10,11 +10,11 @@ patterns:
 `(?s)(.+)?\.swapcase$`
 `(?s)(.+)?\.title$`
 `(?s)(.+)?\.upper$`
-`(?s)(.+)?\.ladder$`
 `(?s)(.+ )?(?:\((.+)\))?\.vc(.+)?$`
 """
 
-from telethon import events
+from .global_functions import log
+from telethon import events, sync
 from random import choice
 import re
 
@@ -25,8 +25,7 @@ async def string_map(event, string_mapper):
     new_message_text = string_mapper(message_text)
     await event.respond(new_message_text, reply_to=event.reply_to_msg_id)
     await event.delete()
-    sender = await event.get_sender()
-    print(f"[{event.date.strftime('%c')}] [{sender.id}] {sender.username}: {event.pattern_match.string}")
+    await log(event)
 
 
 @events.register(events.NewMessage(pattern=r"(?s)(.+)?\.capitali[zs]e$", incoming=False))
@@ -59,11 +58,14 @@ async def upper(event):
     await string_map(event, str.upper)
 
 
-@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.ladder$", incoming=False))
-async def ladder(event):
-    def ladderify(text):
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.split(\"(.+)\")?$", incoming=False))
+async def split(event):
+    replacement = event.pattern_match.group(3)
+    def splitty(text):
+        if replacement:
+            return text.replace(" ", replacement)
         return text.replace(" ", "\n")
-    await string_map(event, ladderify)
+    await string_map(event, splitty)
 
 
 # 【  Ｖ  Ａ  Ｐ  Ｏ  Ｒ  Ｗ  Ａ  Ｖ  Ｅ  】
