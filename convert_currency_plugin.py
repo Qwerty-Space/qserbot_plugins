@@ -15,7 +15,7 @@ c = CurrencyConverter()
 
 
 # Convert Currency
-@events.register(events.NewMessage(pattern=r"(?i)^t ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$", outgoing=True))
+@events.register(events.NewMessage(pattern=r"(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$", outgoing=True))
 async def currency(event):
     fromval = event.pattern_match.group(1)
     if not fromval:
