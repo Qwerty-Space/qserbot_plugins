@@ -10,6 +10,8 @@ patterns:
 `(?s)(.+)?\.swapcase$`
 `(?s)(.+)?\.title$`
 `(?s)(.+)?\.upper$`
+`(?s)(.+)?\.split(\"(.+)\")?$`
+`(?s)(.+)?\.slice(\"(.+)\")?$`
 `(?s)(.+ )?(?:\((.+)\))?\.vc(.+)?$`
 """
 
@@ -62,10 +64,22 @@ async def upper(event):
 async def split(event):
     replacement = event.pattern_match.group(3)
     def splitty(text):
+        print(text)
         if replacement:
             return text.replace(" ", replacement)
         return text.replace(" ", "\n")
     await string_map(event, splitty)
+
+
+@events.register(events.NewMessage(pattern=r"(?s)(.+)?\.slice(\"(.+)\")?$", incoming=False))
+async def slice(event):
+    replacement = event.pattern_match.group(3)
+    def slicey(text):
+        chars = list(text)
+        if replacement:
+            return replacement.join(chars)
+        return "  ".join(chars)
+    await string_map(event, slicey)
 
 
 # 【  Ｖ  Ａ  Ｐ  Ｏ  Ｒ  Ｗ  Ａ  Ｖ  Ｅ  】
