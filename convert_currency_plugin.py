@@ -2,14 +2,15 @@ r"""Converts two different currencies using the [European Central Bank's exchang
 
 Example: "c GBP to/in USD" (case insensitive).
 You can also specify an amount of said currency:
-"c 5 GBP to USD".
+`c 5 GBP to USD`.
 
 Also works inline by asking the user what currency is in currency.  Example:
-"Bob, what's 5 GPB in USD?"
+Alice: `Bob, what's 5 GBP in USD?`
 Punctuation optional.
 
 patterns:
 `(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$`
+
 `(?i)^(\w+).?(?: what is | what['’]s )?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})\??$`
 """
 
@@ -39,7 +40,7 @@ async def convert(event, fromval, fromcur, tocur, reply):
 
 # Inline
 @events.register(events.NewMessage(
-    pattern=r"(?i)^p ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$",
+    pattern=r"(?i)^c ?(\d{1,9}|\d{1,9}\.\d\d?)? ?(\D{3}) (?:to|in) (\D{3})$",
     outgoing=True
     )
 )
