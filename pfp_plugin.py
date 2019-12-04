@@ -19,10 +19,12 @@ def fuzzyfinder(msg, pfp):
 
     if fuzz.partial_ratio(f"you have a new {pfp}", msg) >= 80:
         return True
+    
+    return False
 
 
 # hi
-@events.register(events.NewMessage(pattern=re.compile(r"\b((pf|p(rofile)?|d(isplay)?) ?(p(ic(ture)?|ima?ge?)?)?\b)").search, incoming=True))
+@events.register(events.NewMessage(pattern=re.compile(r"(?i)\b((pf|p(rofile)?|display|dp) ?(p(ic(ture)?|ima?ge?)?)?\b)").search, incoming=True))
 async def on_pfp(event):
     if event.is_private:    # If command was sent in private
         msg = event.pattern_match.string
