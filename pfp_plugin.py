@@ -19,7 +19,7 @@ def fuzzyfinder(msg, pfp):
 
     if fuzz.partial_ratio(f"you have a new {pfp}", msg) >= 80:
         return True
-    
+
     return False
 
 
@@ -29,7 +29,9 @@ async def on_pfp(event):
     if event.is_private:    # If command was sent in private
         msg = event.pattern_match.string
         pfp = event.pattern_match.group(1)
-        fuzzyfinder(msg, pfp)
+
+        if not fuzzyfinder(msg, pfp):
+            return
 
         await log(event, msg)    # Logs the event
         await event.delete()
